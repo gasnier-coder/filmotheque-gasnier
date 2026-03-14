@@ -1,0 +1,5159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmothèque C. GASNIER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+        }
+
+        .hero {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://d2xsxph8kpxj0f.cloudfront.net/310519663296947544/QCtLkeeggMnS5cpsY2aBKJ/hero-cinema-fSyfckYLzLTac9eGzmzYy8.webp');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            z-index: 3;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .controls-section {
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #2a2a2a;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .genre-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .genre-filters.hidden {
+            display: none;
+        }
+
+        .toggle-genres-btn {
+            padding: 8px 14px;
+            background-color: #2a2a2a;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-genres-btn:hover {
+            background-color: #3a3a3a;
+        }
+
+        .genre-btn {
+            padding: 8px 14px;
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .genre-btn:hover {
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+
+        .genre-btn.active {
+            background-color: #d4af37;
+            color: #1a1a1a;
+            border-color: #d4af37;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-box input::placeholder {
+            color: #a0a0a0;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn {
+            padding: 10px 16px;
+            background-color: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #e5c158;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #2a2a2a;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+        }
+
+        .btn-secondary:hover {
+            background-color: #3a3a3a;
+        }
+
+        .btn-danger {
+            background-color: #c41e3a;
+            color: #ffffff;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background-color: #d42a45;
+        }
+
+        .counter {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-top: 10px;
+        }
+
+        .movies-list {
+            padding: 20px 0;
+        }
+
+        .movie-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .movie-row:hover {
+            border-color: #d4af37;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .movie-number {
+            font-weight: 700;
+            color: #d4af37;
+            min-width: 30px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .movie-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .movie-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ffffff;
+            word-break: break-word;
+        }
+
+        .movie-details {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            flex-wrap: wrap;
+        }
+
+        .movie-genre {
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .movie-year {
+            color: #808080;
+        }
+
+        .prete-badge {
+            display: inline-block;
+            background-color: #c41e3a;
+            color: #ffffff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .trailer-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #d4af37;
+            color: #1a1a1a;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .trailer-link:hover {
+            background-color: #e5c158;
+            transform: scale(1.05);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0a0a0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #d4af37;
+        }
+
+        .close {
+            color: #a0a0a0;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #d4af37;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #d4af37;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #ffffff;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #1a1a1a;
+            border-top: 1px solid #2a2a2a;
+            padding: 20px 0;
+            text-align: center;
+            color: #a0a0a0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .movie-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .movie-actions {
+                width: 100%;
+            }
+
+            .movie-details {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Filmothèque C. GASNIER</h1>
+            <p>Cette liste est à jour</p>
+        </div>
+        <div class="hero-line"></div>
+    </section>
+
+    <!-- Controls Section -->
+    <section class="controls-section">
+        <div class="container">
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Rechercher par titre...">
+                </div>
+                <button class="btn" onclick="openAddModal()">+ Ajouter un film</button>
+                <button class="toggle-genres-btn" onclick="toggleGenreFilters()">📂 Filtrer par genre</button>
+                <button class="toggle-genres-btn" id="sortYearBtn" onclick="toggleSortYear()">📅 Trier par année</button>
+            </div>
+            <div class="genre-filters hidden" id="genreFilters"></div>
+            <div class="counter">
+                <span id="movieCount">0</span> film(s) dans la collection
+            </div>
+        </div>
+    </section>
+
+    <!-- Movies List -->
+    <div class="container">
+        <div class="movies-list" id="moviesList"></div>
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>Aucun film ne correspond à votre recherche</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>La collection de films de C. GASNIER</p>
+        <p style="font-size: 0.85rem;">Cliquez sur "Bande-annonce" pour accéder aux vidéos YouTube</p>
+    </footer>
+
+    <!-- Modal Add/Edit Film -->
+    <div id="filmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un film</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="filmForm" onsubmit="saveFilm(event)">
+                <div class="form-group">
+                    <label for="filmTitle">Titre du film</label>
+                    <input type="text" id="filmTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="filmGenre">Genre</label>
+                    <input type="text" id="filmGenre" placeholder="ex: Action, Drame, Science Fiction...">
+                </div>
+                <div class="form-group">
+                    <label for="filmYear">Année</label>
+                    <input type="number" id="filmYear" min="1900" max="2100">
+                </div>
+                <div class="form-group">
+                    <label for="filmTrailer">Lien bande-annonce (optionnel)</label>
+                    <input type="url" id="filmTrailer" placeholder="https://www.youtube.com/...">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="filmPrete" style="width: auto; margin-right: 8px;">
+                        <span style="color: #ffffff;">Film prêté</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="filmEmprunteur">Nom de l'emprunteur (si prêté)</label>
+                    <input type="text" id="filmEmprunteur" placeholder="ex: Jean Dupont">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les films du localStorage ou utiliser les données par défaut
+        let movies = JSON.parse(localStorage.getItem('moviesCollection')) || [];
+        let editingIndex = -1;
+        let currentGenreFilter = null;
+        let genreFiltersVisible = false;
+        let sortYearOrder = null;
+
+        // Charger les films initiaux depuis le fichier JSON
+        const initialMovies = [
+  {
+    "Titre": "A . I",
+    "Genre": "Science Fiction",
+    "Lieu": "R3",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=A+.+I+2001+bande+annonce"
+  },
+  {
+    "Titre": "Adults in the room",
+    "Genre": "Drame",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Adults+in+the+room+2019+bande+annonce"
+  },
+  {
+    "Titre": "Ad vitam",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ad+vitam+2025+bande+annonce"
+  },
+  {
+    "Titre": "Aka",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Aka+2023+bande+annonce"
+  },
+  {
+    "Titre": "Aladin 1",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Aladin+1+2015+bande+annonce"
+  },
+  {
+    "Titre": "Aladin 2",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Aladin+2+2018+bande+annonce"
+  },
+  {
+    "Titre": "Alien VS Predator",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Alien+VS+Predator+2004+bande+annonce"
+  },
+  {
+    "Titre": "Alita",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Alita+2019+bande+annonce"
+  },
+  {
+    "Titre": "All the devils men",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=All+the+devils+men+2018+bande+annonce"
+  },
+  {
+    "Titre": "Ambulance 2022",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ambulance+2022+2022+bande+annonce"
+  },
+  {
+    "Titre": "Angels and demons",
+    "Genre": "Thriller",
+    "Lieu": "R1",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Angels+and+demons+2009+bande+annonce"
+  },
+  {
+    "Titre": "Anna",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Anna+2019+bande+annonce"
+  },
+  {
+    "Titre": "Annihilation",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Annihilation+2018+bande+annonce"
+  },
+  {
+    "Titre": "Anon",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Anon+2018+bande+annonce"
+  },
+  {
+    "Titre": "Antigang 1",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Antigang+1+2015+bande+annonce"
+  },
+  {
+    "Titre": "Antigang 2",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Antigang+2+2023+bande+annonce"
+  },
+  {
+    "Titre": "Antman - La guêpe",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Antman+-+La+guêpe+2018+bande+annonce"
+  },
+  {
+    "Titre": "Aquaman",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Aquaman+2018+bande+annonce"
+  },
+  {
+    "Titre": "Arès",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Arès+2016+bande+annonce"
+  },
+  {
+    "Titre": "Armstrong",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Armstrong+2015+bande+annonce"
+  },
+  {
+    "Titre": "Assasin creed",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Assasin+creed+2016+bande+annonce"
+  },
+  {
+    "Titre": "Assassination games",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Assassination+games+2011+bande+annonce"
+  },
+  {
+    "Titre": "Asterix : Mission Cleopatre",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Asterix+:+Mission+Cleopatre+2002+bande+annonce"
+  },
+  {
+    "Titre": "Asterix aux jeux olympiques",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Asterix+aux+jeux+olympiques+2008+bande+annonce"
+  },
+  {
+    "Titre": "Atlas",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Atlas+2024+bande+annonce"
+  },
+  {
+    "Titre": "Atomic Blond",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Atomic+Blond+2017+bande+annonce"
+  },
+  {
+    "Titre": "Avatar",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avatar+2009+bande+annonce"
+  },
+  {
+    "Titre": "Avatar : La voie de l'eau",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avatar+:+La+voie+de+l'eau+2022+bande+annonce"
+  },
+  {
+    "Titre": "Avengers 1",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": 2012,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avengers+1+2012+bande+annonce"
+  },
+  {
+    "Titre": "Avengers 2 : Age of Ultron",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avengers+2+:+Age+of+Ultron+2015+bande+annonce"
+  },
+  {
+    "Titre": "Avengers 3 : Infinity War",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avengers+3+:+Infinity+War+2018+bande+annonce"
+  },
+  {
+    "Titre": "Avengers 4 : End Game",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avengers+4+:+End+Game+2019+bande+annonce"
+  },
+  {
+    "Titre": "Avengers 5  : Thunderbolts",
+    "Genre": "Fantastique",
+    "Lieu": "",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Avengers+5++:+Thunderbolts++bande+annonce"
+  },
+  {
+    "Titre": "Baby driver",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Baby+driver+2017+bande+annonce"
+  },
+  {
+    "Titre": "Back to black (Amy Winhouse)",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Back+to+black+(Amy+Winhouse)+2024+bande+annonce"
+  },
+  {
+    "Titre": "BAC Nord",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=BAC+Nord+2020+bande+annonce"
+  },
+  {
+    "Titre": "Bad boys 1",
+    "Genre": "Policier / Action",
+    "Lieu": "R2",
+    "Annee": 1995,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bad+boys+1+1995+bande+annonce"
+  },
+  {
+    "Titre": "Bad boys 2",
+    "Genre": "Policier / Action",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bad+boys+2+2003+bande+annonce"
+  },
+  {
+    "Titre": "Bad boys for life",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bad+boys+for+life+2020+bande+annonce"
+  },
+  {
+    "Titre": "Bad boys - Ride or die",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bad+boys+-+Ride+or+die+2023+bande+annonce"
+  },
+  {
+    "Titre": "Ballerina",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ballerina+2025+bande+annonce"
+  },
+  {
+    "Titre": "Balle perdue",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Balle+perdue+2020+bande+annonce"
+  },
+  {
+    "Titre": "Balle perdue 2",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Balle+perdue+2+2022+bande+annonce"
+  },
+  {
+    "Titre": "Banlieue 13",
+    "Genre": "Fiction",
+    "Lieu": "R2",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Banlieue+13+2004+bande+annonce"
+  },
+  {
+    "Titre": "Banlieue 13 ultimatum",
+    "Genre": "Fiction",
+    "Lieu": "R2",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Banlieue+13+ultimatum+2009+bande+annonce"
+  },
+  {
+    "Titre": "Batman (Dark night)",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Batman+(Dark+night)+2008+bande+annonce"
+  },
+  {
+    "Titre": "Batman 2022 (The Batman)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Batman+2022+(The+Batman)+2022+bande+annonce"
+  },
+  {
+    "Titre": "Batman Begins",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Batman+Begins+2005+bande+annonce"
+  },
+  {
+    "Titre": "Batman et Robin",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 1997,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Batman+et+Robin+1997+bande+annonce"
+  },
+  {
+    "Titre": "Battle Los Angeles",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Battle+Los+Angeles+2011+bande+annonce"
+  },
+  {
+    "Titre": "Bienvenue chez les ch'tis",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bienvenue+chez+les+ch'tis+2008+bande+annonce"
+  },
+  {
+    "Titre": "Big boss",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 1973,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Big+boss+1973+bande+annonce"
+  },
+  {
+    "Titre": "Bigard met le paquet",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": 1900,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bigard+met+le+paquet+1900+bande+annonce"
+  },
+  {
+    "Titre": "Birds of prey",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Birds+of+prey+2020+bande+annonce"
+  },
+  {
+    "Titre": "Bittersweet Life",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bittersweet+Life+2005+bande+annonce"
+  },
+  {
+    "Titre": "Black adam",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Black+adam+2022+bande+annonce"
+  },
+  {
+    "Titre": "Black mask",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 1996,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Black+mask+1996+bande+annonce"
+  },
+  {
+    "Titre": "Black panther",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Black+panther+2018+bande+annonce"
+  },
+  {
+    "Titre": "Black widow",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Black+widow+2021+bande+annonce"
+  },
+  {
+    "Titre": "Blade 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 1998,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blade+1+1998+bande+annonce"
+  },
+  {
+    "Titre": "Blade 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blade+2+2002+bande+annonce"
+  },
+  {
+    "Titre": "Blade 3",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blade+3+2004+bande+annonce"
+  },
+  {
+    "Titre": "Bleed for this (Vinny Pazienza)",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bleed+for+this+(Vinny+Pazienza)+2016+bande+annonce"
+  },
+  {
+    "Titre": "Bleeding steel",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bleeding+steel+2017+bande+annonce"
+  },
+  {
+    "Titre": "Blood and bone",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blood+and+bone+2009+bande+annonce"
+  },
+  {
+    "Titre": "Blood it",
+    "Genre": "Polar",
+    "Lieu": "R1",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blood+it+2019+bande+annonce"
+  },
+  {
+    "Titre": "Blood out",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blood+out+2011+bande+annonce"
+  },
+  {
+    "Titre": "Blue Beetle",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Blue+Beetle+2023+bande+annonce"
+  },
+  {
+    "Titre": "Bohemian Rhapsody",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bohemian+Rhapsody+2018+bande+annonce"
+  },
+  {
+    "Titre": "Boyca",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Boyca+2017+bande+annonce"
+  },
+  {
+    "Titre": "Brice 3",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Brice+3+2016+bande+annonce"
+  },
+  {
+    "Titre": "Brice de Nice",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Brice+de+Nice+2005+bande+annonce"
+  },
+  {
+    "Titre": "Bronx french",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bronx+french+2020+bande+annonce"
+  },
+  {
+    "Titre": "Bruce tout puissant",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bruce+tout+puissant+2003+bande+annonce"
+  },
+  {
+    "Titre": "Bullet train",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Bullet+train+2022+bande+annonce"
+  },
+  {
+    "Titre": "Burlesque",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Burlesque+2010+bande+annonce"
+  },
+  {
+    "Titre": "Camping 1",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Camping+1+2006+bande+annonce"
+  },
+  {
+    "Titre": "Camping 2",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Camping+2+2010+bande+annonce"
+  },
+  {
+    "Titre": "Camping 3",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Camping+3+2016+bande+annonce"
+  },
+  {
+    "Titre": "Captain America 1 (First Avenger )",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Captain+America+1+(First+Avenger+)+2011+bande+annonce"
+  },
+  {
+    "Titre": "Captain America 2 (Le soldat de l'hiver)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Captain+America+2+(Le+soldat+de+l'hiver)+2014+bande+annonce"
+  },
+  {
+    "Titre": "Captain america 3 (Civil war)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Captain+america+3+(Civil+war)+2016+bande+annonce"
+  },
+  {
+    "Titre": "Captain America 4 (Brave new world)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Captain+America+4+(Brave+new+world)+2025+bande+annonce"
+  },
+  {
+    "Titre": "Captain Marvel",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Captain+Marvel+2019+bande+annonce"
+  },
+  {
+    "Titre": "Car 1",
+    "Genre": "Animé",
+    "Lieu": "R4",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Car+1+2006+bande+annonce"
+  },
+  {
+    "Titre": "Car 2",
+    "Genre": "Animé",
+    "Lieu": "R4",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Car+2+2011+bande+annonce"
+  },
+  {
+    "Titre": "Carter",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Carter+2017+bande+annonce"
+  },
+  {
+    "Titre": "Casino Royal (James Bond)",
+    "Genre": "Espionnage / action",
+    "Lieu": "R2",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Casino+Royal+(James+Bond)+2006+bande+annonce"
+  },
+  {
+    "Titre": "Catwoman",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Catwoman+2004+bande+annonce"
+  },
+  {
+    "Titre": "Cellular",
+    "Genre": "Thriller",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Cellular+2004+bande+annonce"
+  },
+  {
+    "Titre": "Charlie et la chocolaterie",
+    "Genre": "Enfants",
+    "Lieu": "R1",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Charlie+et+la+chocolaterie+2005+bande+annonce"
+  },
+  {
+    "Titre": "Charlie's angels 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2000,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Charlie's+angels+1+2000+bande+annonce"
+  },
+  {
+    "Titre": "Charlie's angels 2",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Charlie's+angels+2+2003+bande+annonce"
+  },
+  {
+    "Titre": "Charlie's angels 2019",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Charlie's+angels+2019+2019+bande+annonce"
+  },
+  {
+    "Titre": "Chasse à l'homme 2",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Chasse+à+l'homme+2+2016+bande+annonce"
+  },
+  {
+    "Titre": "Chasseur de prime",
+    "Genre": "Multi genres",
+    "Lieu": "R4",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Chasseur+de+prime+2010+bande+annonce"
+  },
+  {
+    "Titre": "Chien 51",
+    "Genre": "Action/SF",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Chien+51+2025+bande+annonce"
+  },
+  {
+    "Titre": "Chouchou",
+    "Genre": "Comédie",
+    "Lieu": "R3",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Chouchou+2003+bande+annonce"
+  },
+  {
+    "Titre": "Close",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Close+2022+bande+annonce"
+  },
+  {
+    "Titre": "Coco",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Coco+2017+bande+annonce"
+  },
+  {
+    "Titre": "Code 211",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Code+211+2018+bande+annonce"
+  },
+  {
+    "Titre": "Collateral",
+    "Genre": "Thriller",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Collateral+2004+bande+annonce"
+  },
+  {
+    "Titre": "Colombiana",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Colombiana+2011+bande+annonce"
+  },
+  {
+    "Titre": "Conclave",
+    "Genre": "Histoire",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Conclave+2024+bande+annonce"
+  },
+  {
+    "Titre": "Creed 2",
+    "Genre": "Boxe",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Creed+2+2018+bande+annonce"
+  },
+  {
+    "Titre": "Creed 3",
+    "Genre": "Boxe",
+    "Lieu": "",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Creed+3+2023+bande+annonce"
+  },
+  {
+    "Titre": "Cutaway",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2000,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Cutaway+2000+bande+annonce"
+  },
+  {
+    "Titre": "Da Vinci Code",
+    "Genre": "Fiction",
+    "Lieu": "R1",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Da+Vinci+Code+2006+bande+annonce"
+  },
+  {
+    "Titre": "Danny the dog",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Danny+the+dog+2005+bande+annonce"
+  },
+  {
+    "Titre": "Dany Boon au Bataclan",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": 1900,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dany+Boon+au+Bataclan+1900+bande+annonce"
+  },
+  {
+    "Titre": "Dardevil",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dardevil+2003+bande+annonce"
+  },
+  {
+    "Titre": "Death match",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 1994,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Death+match+1994+bande+annonce"
+  },
+  {
+    "Titre": "Death race 4",
+    "Genre": "Fiction / action",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Death+race+4+2018+bande+annonce"
+  },
+  {
+    "Titre": "Die hard 4",
+    "Genre": "Policier / Action",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Die+hard+4+2004+bande+annonce"
+  },
+  {
+    "Titre": "Dirty dancing",
+    "Genre": "Romantique",
+    "Lieu": "R1",
+    "Annee": 1987,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dirty+dancing+1987+bande+annonce"
+  },
+  {
+    "Titre": "Disco",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Disco+2008+bande+annonce"
+  },
+  {
+    "Titre": "Divergente 1",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Divergente+1+2014+bande+annonce"
+  },
+  {
+    "Titre": "Divergente 2",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Divergente+2+2015+bande+annonce"
+  },
+  {
+    "Titre": "Docteur Strange",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Docteur+Strange+2016+bande+annonce"
+  },
+  {
+    "Titre": "Docteur Strange 2 (multiverse)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Docteur+Strange+2+(multiverse)+2022+bande+annonce"
+  },
+  {
+    "Titre": "Dragon rouge (Hanibal Lecter)",
+    "Genre": "Thriller",
+    "Lieu": "R1",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dragon+rouge+(Hanibal+Lecter)+2002+bande+annonce"
+  },
+  {
+    "Titre": "Dragonball",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2012,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dragonball+2012+bande+annonce"
+  },
+  {
+    "Titre": "Driven",
+    "Genre": "Sport",
+    "Lieu": "DD",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Driven+2001+bande+annonce"
+  },
+  {
+    "Titre": "Dubosc : j'vous ai pas raconte",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": 1900,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dubosc+:+j'vous+ai+pas+raconte+1900+bande+annonce"
+  },
+  {
+    "Titre": "Dubosc : Romantique",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": 1900,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Dubosc+:+Romantique+1900+bande+annonce"
+  },
+  {
+    "Titre": "Easy Rider",
+    "Genre": "Drame / Road movie",
+    "Lieu": "DD",
+    "Annee": 1969,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Easy+Rider+1969+bande+annonce"
+  },
+  {
+    "Titre": "Elektra",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Elektra+2005+bande+annonce"
+  },
+  {
+    "Titre": "Elie Seimoun : les petites annonces",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": 1900,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Elie+Seimoun+:+les+petites+annonces+1900+bande+annonce"
+  },
+  {
+    "Titre": "Eliminator",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 1985,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Eliminator+1985+bande+annonce"
+  },
+  {
+    "Titre": "Elvis",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Elvis+2022+bande+annonce"
+  },
+  {
+    "Titre": "Elysium",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2013,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Elysium+2013+bande+annonce"
+  },
+  {
+    "Titre": "Emancipation",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Emancipation+2022+bande+annonce"
+  },
+  {
+    "Titre": "En eaux troubles",
+    "Genre": "Horreur",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=En+eaux+troubles+2018+bande+annonce"
+  },
+  {
+    "Titre": "Equalizer 2",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Equalizer+2+2018+bande+annonce"
+  },
+  {
+    "Titre": "Equalizer 3",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Equalizer+3+2023+bande+annonce"
+  },
+  {
+    "Titre": "Equilibrium",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Equilibrium+2003+bande+annonce"
+  },
+  {
+    "Titre": "Espion amateur",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R3",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Espion+amateur+2001+bande+annonce"
+  },
+  {
+    "Titre": "ET",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 1982,
+    "TrailerLink": "https://www.youtube.com/results?search_query=ET+1982+bande+annonce"
+  },
+  {
+    "Titre": "Expendables 4",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Expendables+4+2010+bande+annonce"
+  },
+  {
+    "Titre": "Extraction",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Extraction+2015+bande+annonce"
+  },
+  {
+    "Titre": "F1",
+    "Genre": "Sport",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=F1+2025+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+1+2001+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 2",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+2+2003+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 4",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+4+2009+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 5",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+5+2011+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 6",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2013,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+6+2013+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 7",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+7+2015+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 8",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+8+2017+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious 9",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+9+2021+bande+annonce"
+  },
+  {
+    "Titre": "Fast and furious X",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fast+and+furious+X+2023+bande+annonce"
+  },
+  {
+    "Titre": "Fatal",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Fatal+2010+bande+annonce"
+  },
+  {
+    "Titre": "Final fantasy",
+    "Genre": "Science Fiction",
+    "Lieu": "R3",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Final+fantasy+2001+bande+annonce"
+  },
+  {
+    "Titre": "Footloose",
+    "Genre": "Danse",
+    "Lieu": "R1",
+    "Annee": 1984,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Footloose+1984+bande+annonce"
+  },
+  {
+    "Titre": "Forte",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Forte+2020+bande+annonce"
+  },
+  {
+    "Titre": "From Paris with love",
+    "Genre": "Espionnage / action",
+    "Lieu": "R1",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=From+Paris+with+love+2010+bande+annonce"
+  },
+  {
+    "Titre": "Furiosa (Une saga Mad Max)",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Furiosa+(Une+saga+Mad+Max)+2024+bande+annonce"
+  },
+  {
+    "Titre": "Futur world",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Futur+world+2018+bande+annonce"
+  },
+  {
+    "Titre": "G.I Joe",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=G.I+Joe+2009+bande+annonce"
+  },
+  {
+    "Titre": "Game of death",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Game+of+death+2010+bande+annonce"
+  },
+  {
+    "Titre": "Gang of New york",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Gang+of+New+york+2003+bande+annonce"
+  },
+  {
+    "Titre": "Gémini man",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Gémini+man+2019+bande+annonce"
+  },
+  {
+    "Titre": "Georges de la jungle 1",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 1997,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Georges+de+la+jungle+1+1997+bande+annonce"
+  },
+  {
+    "Titre": "Georges de la jungle 2",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Georges+de+la+jungle+2+2003+bande+annonce"
+  },
+  {
+    "Titre": "Geostorm",
+    "Genre": "Catastrophe",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Geostorm+2017+bande+annonce"
+  },
+  {
+    "Titre": "Ghost in the shell",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ghost+in+the+shell+2017+bande+annonce"
+  },
+  {
+    "Titre": "Ghost rider",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ghost+rider+2007+bande+annonce"
+  },
+  {
+    "Titre": "Ghost rider 2",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2012,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ghost+rider+2+2012+bande+annonce"
+  },
+  {
+    "Titre": "Gladiator 2",
+    "Genre": "Histoire / Action",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Gladiator+2+2024+bande+annonce"
+  },
+  {
+    "Titre": "Go fast",
+    "Genre": "Policier / Action",
+    "Lieu": "R3",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Go+fast+2008+bande+annonce"
+  },
+  {
+    "Titre": "Goldmember",
+    "Genre": "Espionnage / action",
+    "Lieu": "R3",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Goldmember+2002+bande+annonce"
+  },
+  {
+    "Titre": "Gomez & Tavares",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Gomez+&+Tavares+2003+bande+annonce"
+  },
+  {
+    "Titre": "Gomez VS Tavares",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Gomez+VS+Tavares+2007+bande+annonce"
+  },
+  {
+    "Titre": "Gran Turismo",
+    "Genre": "Sport F1",
+    "Lieu": "DD",
+    "Annee": 2026,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Gran+Turismo+2026+bande+annonce"
+  },
+  {
+    "Titre": "Great balls of fire (Jerry Lee Lewis)",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 1989,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Great+balls+of+fire+(Jerry+Lee+Lewis)+1989+bande+annonce"
+  },
+  {
+    "Titre": "Green lantern",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Green+lantern+2011+bande+annonce"
+  },
+  {
+    "Titre": "Greenland",
+    "Genre": "Catastrophe",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Greenland+2020+bande+annonce"
+  },
+  {
+    "Titre": "Guardians of galaxy 1",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Guardians+of+galaxy+1+2014+bande+annonce"
+  },
+  {
+    "Titre": "Guardians of galaxy 2",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Guardians+of+galaxy+2+2017+bande+annonce"
+  },
+  {
+    "Titre": "Guardians of galaxy 3",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Guardians+of+galaxy+3+2023+bande+annonce"
+  },
+  {
+    "Titre": "Hancock",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hancock+2008+bande+annonce"
+  },
+  {
+    "Titre": "Hannibal",
+    "Genre": "Thriller",
+    "Lieu": "R3",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hannibal+2001+bande+annonce"
+  },
+  {
+    "Titre": "Harley et les Davidson (1 à 3)",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Harley+et+les+Davidson+(1+à+3)+2016+bande+annonce"
+  },
+  {
+    "Titre": "Headhunters",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Headhunters+2011+bande+annonce"
+  },
+  {
+    "Titre": "Headshot",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Headshot+2016+bande+annonce"
+  },
+  {
+    "Titre": "Hitman : agent 47",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hitman+:+agent+47+2015+bande+annonce"
+  },
+  {
+    "Titre": "Hooligans 3",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hooligans+3+2014+bande+annonce"
+  },
+  {
+    "Titre": "Hulk 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hulk+1+2003+bande+annonce"
+  },
+  {
+    "Titre": "Hulk 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hulk+2+2008+bande+annonce"
+  },
+  {
+    "Titre": "Hypertension 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hypertension+1+2007+bande+annonce"
+  },
+  {
+    "Titre": "Hypertension 2",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Hypertension+2+2009+bande+annonce"
+  },
+  {
+    "Titre": "I. Robot",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=I.+Robot+2004+bande+annonce"
+  },
+  {
+    "Titre": "Incassable",
+    "Genre": "Fiction",
+    "Lieu": "R3",
+    "Annee": 2000,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Incassable+2000+bande+annonce"
+  },
+  {
+    "Titre": "Independance day 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 1986,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Independance+day+1+1986+bande+annonce"
+  },
+  {
+    "Titre": "Independance day 2",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Independance+day+2+2016+bande+annonce"
+  },
+  {
+    "Titre": "Indiana Jones 1",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 1981,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Indiana+Jones+1+1981+bande+annonce"
+  },
+  {
+    "Titre": "Indiana Jones 2",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 1984,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Indiana+Jones+2+1984+bande+annonce"
+  },
+  {
+    "Titre": "Indiana Jones 3",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 1989,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Indiana+Jones+3+1989+bande+annonce"
+  },
+  {
+    "Titre": "Indiana Jones 4",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Indiana+Jones+4+2008+bande+annonce"
+  },
+  {
+    "Titre": "Indiana Jones 5",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Indiana+Jones+5+2023+bande+annonce"
+  },
+  {
+    "Titre": "Inferno",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Inferno+2016+bande+annonce"
+  },
+  {
+    "Titre": "Inglorious basterds",
+    "Genre": "Guerre",
+    "Lieu": "R3",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Inglorious+basterds+2009+bande+annonce"
+  },
+  {
+    "Titre": "Insaisissables 3",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Insaisissables+3+2025+bande+annonce"
+  },
+  {
+    "Titre": "Interceptor",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Interceptor+2022+bande+annonce"
+  },
+  {
+    "Titre": "Interstellar",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Interstellar+2014+bande+annonce"
+  },
+  {
+    "Titre": "Intouchable",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Intouchable+2011+bande+annonce"
+  },
+  {
+    "Titre": "Invisible man 2020",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Invisible+man+2020+2020+bande+annonce"
+  },
+  {
+    "Titre": "Ipman 1",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ipman+1+2008+bande+annonce"
+  },
+  {
+    "Titre": "Ipman 2",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ipman+2+2010+bande+annonce"
+  },
+  {
+    "Titre": "Ipman 3",
+    "Genre": "Arts Martiaux",
+    "Lieu": "",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ipman+3+2015+bande+annonce"
+  },
+  {
+    "Titre": "Ipman 4",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ipman+4+2020+bande+annonce"
+  },
+  {
+    "Titre": "Ironman 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ironman+1+2008+bande+annonce"
+  },
+  {
+    "Titre": "Ironman 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ironman+2+2010+bande+annonce"
+  },
+  {
+    "Titre": "Ironman 3",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2013,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ironman+3+2013+bande+annonce"
+  },
+  {
+    "Titre": "J'adore ce que vous faites",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=J'adore+ce+que+vous+faites+2022+bande+annonce"
+  },
+  {
+    "Titre": "Jack Reacher",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2012,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jack+Reacher+2012+bande+annonce"
+  },
+  {
+    "Titre": "Jason Bourne 2016",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jason+Bourne+2016+2016+bande+annonce"
+  },
+  {
+    "Titre": "Je suis une legende",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Je+suis+une+legende+2007+bande+annonce"
+  },
+  {
+    "Titre": "Jean-Philippe",
+    "Genre": "Fiction",
+    "Lieu": "R3",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jean-Philippe+2006+bande+annonce"
+  },
+  {
+    "Titre": "John wick 1",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=John+wick+1+2014+bande+annonce"
+  },
+  {
+    "Titre": "John wick 2",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=John+wick+2+2017+bande+annonce"
+  },
+  {
+    "Titre": "John wick 3",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=John+wick+3+2019+bande+annonce"
+  },
+  {
+    "Titre": "John Wick 4",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=John+Wick+4+2023+bande+annonce"
+  },
+  {
+    "Titre": "Joker",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Joker+2019+bande+annonce"
+  },
+  {
+    "Titre": "Joker : Folie à deux",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Joker+:+Folie+à+deux+2024+bande+annonce"
+  },
+  {
+    "Titre": "Jumanji : next level",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jumanji+:+next+level+2019+bande+annonce"
+  },
+  {
+    "Titre": "Jumper",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jumper+2008+bande+annonce"
+  },
+  {
+    "Titre": "Jungle Cruise",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jungle+Cruise+2021+bande+annonce"
+  },
+  {
+    "Titre": "Jurrasic word 2",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jurrasic+word+2+2018+bande+annonce"
+  },
+  {
+    "Titre": "Jurassic World Renaissance ",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Jurassic+World+Renaissance++2025+bande+annonce"
+  },
+  {
+    "Titre": "Justice League 2021",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Justice+League+2021++bande+annonce"
+  },
+  {
+    "Titre": "Karaté kid legend",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Karaté+kid+legend+2025+bande+annonce"
+  },
+  {
+    "Titre": "Kickboxer vengeance",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kickboxer+vengeance+2016+bande+annonce"
+  },
+  {
+    "Titre": "Kidnap",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kidnap+2017+bande+annonce"
+  },
+  {
+    "Titre": "Kill Bill 1",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kill+Bill+1+2003+bande+annonce"
+  },
+  {
+    "Titre": "Kill Bill 2",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kill+Bill+2+2004+bande+annonce"
+  },
+  {
+    "Titre": "Kill'em all",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2013,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kill'em+all+2013+bande+annonce"
+  },
+  {
+    "Titre": "King Kong (2005)",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=King+Kong+(2005)+2005+bande+annonce"
+  },
+  {
+    "Titre": "Kings'man 3 - Première mission",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kings'man+3+-+Première+mission+2021+bande+annonce"
+  },
+  {
+    "Titre": "Kings'man 1",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kings'man+1+2015+bande+annonce"
+  },
+  {
+    "Titre": "Kings'man 2",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kings'man+2+2017+bande+annonce"
+  },
+  {
+    "Titre": "KO Bleed for this",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=KO+Bleed+for+this+2016+bande+annonce"
+  },
+  {
+    "Titre": "Kong skull island",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kong+skull+island+2017+bande+annonce"
+  },
+  {
+    "Titre": "Kraven (The Hunter)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Kraven+(The+Hunter)+2024+bande+annonce"
+  },
+  {
+    "Titre": "l'age de glace",
+    "Genre": "Animé",
+    "Lieu": "R3",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=l'age+de+glace+2002+bande+annonce"
+  },
+  {
+    "Titre": "L'agence tout risque",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'agence+tout+risque+2010+bande+annonce"
+  },
+  {
+    "Titre": "L'antidote",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'antidote+2005+bande+annonce"
+  },
+  {
+    "Titre": "L'appat",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'appat+2001+bande+annonce"
+  },
+  {
+    "Titre": "L'élève Ducobu 1",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'élève+Ducobu+1+2011+bande+annonce"
+  },
+  {
+    "Titre": "L'élève Ducobu 3",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'élève+Ducobu+3+2020+bande+annonce"
+  },
+  {
+    "Titre": "L'espion qui m'à tirée",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 1999,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'espion+qui+m'à+tirée+1999+bande+annonce"
+  },
+  {
+    "Titre": "L'etrange histoire de Benjamin Burton",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'etrange+histoire+de+Benjamin+Burton+2009+bande+annonce"
+  },
+  {
+    "Titre": "L'honneur du dragon",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'honneur+du+dragon+2006+bande+annonce"
+  },
+  {
+    "Titre": "L'immortel",
+    "Genre": "Policier / Action",
+    "Lieu": "R1",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'immortel+2010+bande+annonce"
+  },
+  {
+    "Titre": "L'italien",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=L'italien+2009+bande+annonce"
+  },
+  {
+    "Titre": "La Bamba",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 1987,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+Bamba+1987+bande+annonce"
+  },
+  {
+    "Titre": "La ch'tite famille",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+ch'tite+famille+2018+bande+annonce"
+  },
+  {
+    "Titre": "La chute de la maison blanche",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2013,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+chute+de+la+maison+blanche+2013+bande+annonce"
+  },
+  {
+    "Titre": "La chute du faucon noir",
+    "Genre": "Guerre",
+    "Lieu": "R1",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+chute+du+faucon+noir+2002+bande+annonce"
+  },
+  {
+    "Titre": "La cité perdue 2022",
+    "Genre": "Aventure",
+    "Lieu": "DD",
+    "Annee": 2022,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+cité+perdue+2022+2022+bande+annonce"
+  },
+  {
+    "Titre": "La coccinelle revient",
+    "Genre": "Enfants",
+    "Lieu": "R4",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+coccinelle+revient+2005+bande+annonce"
+  },
+  {
+    "Titre": "La fin des temps",
+    "Genre": "Fantastique / Horreur",
+    "Lieu": "R1",
+    "Annee": 1999,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+fin+des+temps+1999+bande+annonce"
+  },
+  {
+    "Titre": "La fureur du dragon",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 1974,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+fureur+du+dragon+1974+bande+annonce"
+  },
+  {
+    "Titre": "La guerre de la planète des singes",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+guerre+de+la+planète+des+singes+2017+bande+annonce"
+  },
+  {
+    "Titre": "La guerre des mondes",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+guerre+des+mondes+2005+bande+annonce"
+  },
+  {
+    "Titre": "La league des Justicers",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+league+des+Justicers+2017+bande+annonce"
+  },
+  {
+    "Titre": "La legende de Beowulf",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+legende+de+Beowulf+2007+bande+annonce"
+  },
+  {
+    "Titre": "La machine à explorer le temps",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+machine+à+explorer+le+temps+2002+bande+annonce"
+  },
+  {
+    "Titre": "La môme",
+    "Genre": "Bioptic",
+    "Lieu": "R1",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+môme+2007+bande+annonce"
+  },
+  {
+    "Titre": "La momie 1",
+    "Genre": "Aventure",
+    "Lieu": "R2",
+    "Annee": 1999,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+momie+1+1999+bande+annonce"
+  },
+  {
+    "Titre": "La momie 2",
+    "Genre": "Aventure",
+    "Lieu": "R2",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+momie+2+2001+bande+annonce"
+  },
+  {
+    "Titre": "La planete des singes",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+planete+des+singes+2001+bande+annonce"
+  },
+  {
+    "Titre": "La planete des singes 1 : (origines)",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+planete+des+singes+1+:+(origines)+2014+bande+annonce"
+  },
+  {
+    "Titre": "La planete des singes 2 : (l'affrontement)",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+planete+des+singes+2+:+(l'affrontement)+2011+bande+annonce"
+  },
+  {
+    "Titre": "La planète des singes 3 : Suprematie",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+planète+des+singes+3+:+Suprematie+2017+bande+annonce"
+  },
+  {
+    "Titre": "La Planète des singes 4  :  (Le Nouveau Royaume)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+Planète+des+singes+4++:++(Le+Nouveau+Royaume)+2024+bande+annonce"
+  },
+  {
+    "Titre": "La rage au ventre",
+    "Genre": "Boxe",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+rage+au+ventre+2015+bande+annonce"
+  },
+  {
+    "Titre": "La verite si je mens 2",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=La+verite+si+je+mens+2+2001+bande+annonce"
+  },
+  {
+    "Titre": "la verite si je mens 3",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2012,
+    "TrailerLink": "https://www.youtube.com/results?search_query=la+verite+si+je+mens+3+2012+bande+annonce"
+  },
+  {
+    "Titre": "Labyrinthe 1",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Labyrinthe+1+2014+bande+annonce"
+  },
+  {
+    "Titre": "Labyrinthe 2",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2015,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Labyrinthe+2+2015+bande+annonce"
+  },
+  {
+    "Titre": "Labyrinthe 3",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Labyrinthe+3+2018+bande+annonce"
+  },
+  {
+    "Titre": "Largo Winch 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Largo+Winch+1+2008+bande+annonce"
+  },
+  {
+    "Titre": "Largo Winch 2",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Largo+Winch+2+2011+bande+annonce"
+  },
+  {
+    "Titre": "Laurent Gerra à l'olympia",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Laurent+Gerra+à+l'olympia++bande+annonce"
+  },
+  {
+    "Titre": "Laurent Gerra flingue la tele",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Laurent+Gerra+flingue+la+tele++bande+annonce"
+  },
+  {
+    "Titre": "Le baiser du dragon",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R3",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+baiser+du+dragon+2001+bande+annonce"
+  },
+  {
+    "Titre": "Le cascadeur (The fall guy)",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+cascadeur+(The+fall+guy)+2024+bande+annonce"
+  },
+  {
+    "Titre": "Le choc des titans",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2010,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+choc+des+titans+2010+bande+annonce"
+  },
+  {
+    "Titre": "Le cinquième élément",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 1997,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+cinquième+élément+1997+bande+annonce"
+  },
+  {
+    "Titre": "Le dernier mercenaire",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+dernier+mercenaire+2021+bande+annonce"
+  },
+  {
+    "Titre": "Le dernier samouraï",
+    "Genre": "Aventure",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+dernier+samouraï+2004+bande+annonce"
+  },
+  {
+    "Titre": "Le diner de con",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 1998,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+diner+de+con+1998+bande+annonce"
+  },
+  {
+    "Titre": "Le doudou",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+doudou+2018+bande+annonce"
+  },
+  {
+    "Titre": "Le flic de Beverly Hills 2024",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+flic+de+Beverly+Hills+2024+2024+bande+annonce"
+  },
+  {
+    "Titre": "Le Gardien (the beekeeper",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+Gardien+(the+beekeeper++bande+annonce"
+  },
+  {
+    "Titre": "Le jeu",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+jeu+2018+bande+annonce"
+  },
+  {
+    "Titre": "Le jeu de la mort",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 1978,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+jeu+de+la+mort+1978+bande+annonce"
+  },
+  {
+    "Titre": "Le jour le plus long",
+    "Genre": "Guerre",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+jour+le+plus+long++bande+annonce"
+  },
+  {
+    "Titre": "Le jour ou la terre s'arreta",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+jour+ou+la+terre+s'arreta+2008+bande+annonce"
+  },
+  {
+    "Titre": "Le journal de Bridget Jones 1",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+journal+de+Bridget+Jones+1+2001+bande+annonce"
+  },
+  {
+    "Titre": "Le journal de Bridget Jones 2",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+journal+de+Bridget+Jones+2+2004+bande+annonce"
+  },
+  {
+    "Titre": "Le livre de la jungle",
+    "Genre": "Enfants",
+    "Lieu": "R3",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+livre+de+la+jungle+2016+bande+annonce"
+  },
+  {
+    "Titre": "Le medaillon",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+medaillon+2003+bande+annonce"
+  },
+  {
+    "Titre": "Le pacte des loups",
+    "Genre": "Histoire",
+    "Lieu": "R1",
+    "Annee": 2001,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+pacte+des+loups+2001+bande+annonce"
+  },
+  {
+    "Titre": "Le passager",
+    "Genre": "Thriller",
+    "Lieu": "DD",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+passager+2005+bande+annonce"
+  },
+  {
+    "Titre": "Le secret",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2012,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+secret+2012+bande+annonce"
+  },
+  {
+    "Titre": "Le seminaire",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2009,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+seminaire+2009+bande+annonce"
+  },
+  {
+    "Titre": "Le serpent au milles coupures",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+serpent+au+milles+coupures+2017+bande+annonce"
+  },
+  {
+    "Titre": "Le silence des agneaux",
+    "Genre": "Thriller",
+    "Lieu": "R4",
+    "Annee": 1991,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+silence+des+agneaux+1991+bande+annonce"
+  },
+  {
+    "Titre": "Le smoking",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R1",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+smoking+2002+bande+annonce"
+  },
+  {
+    "Titre": "Le transporteur 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2002,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+transporteur+1+2002+bande+annonce"
+  },
+  {
+    "Titre": "Le transporteur 2",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+transporteur+2+2005+bande+annonce"
+  },
+  {
+    "Titre": "Le transporteur 3",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": 2008,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+transporteur+3+2008+bande+annonce"
+  },
+  {
+    "Titre": "Le velo de Gislain Lambert",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 2000,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+velo+de+Gislain+Lambert+2000+bande+annonce"
+  },
+  {
+    "Titre": "Le virtuose",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Le+virtuose+2021+bande+annonce"
+  },
+  {
+    "Titre": "Les 11 commandements",
+    "Genre": "Comedie",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+11+commandements+2004+bande+annonce"
+  },
+  {
+    "Titre": "Les 4 fantastiques 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+4+fantastiques+1+2005+bande+annonce"
+  },
+  {
+    "Titre": "Les 4 fantastiques 2 (et le surfer d'argent)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": 2007,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+4+fantastiques+2+(et+le+surfer+d'argent)+2007+bande+annonce"
+  },
+  {
+    "Titre": "Les 4 fantastiques - Premiers pas 2025",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+4+fantastiques+-+Premiers+pas+2025+2025+bande+annonce"
+  },
+  {
+    "Titre": "Les barbouzes",
+    "Genre": "Comedie",
+    "Lieu": "R1",
+    "Annee": 1964,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+barbouzes+1964+bande+annonce"
+  },
+  {
+    "Titre": "Les blagues de Toto",
+    "Genre": "Comedie",
+    "Lieu": "DD",
+    "Annee": 2020,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+blagues+de+Toto+2020+bande+annonce"
+  },
+  {
+    "Titre": "Les bronzes 3",
+    "Genre": "Comedie",
+    "Lieu": "R1",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+bronzes+3+2003+bande+annonce"
+  },
+  {
+    "Titre": "Les chevaliers du ciel",
+    "Genre": "Action",
+    "Lieu": "R3",
+    "Annee": 2005,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+chevaliers+du+ciel+2005+bande+annonce"
+  },
+  {
+    "Titre": "Les choristes",
+    "Genre": "Histoire",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+choristes+2004+bande+annonce"
+  },
+  {
+    "Titre": "Les éternels (Marvel)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+éternels+(Marvel)+2021+bande+annonce"
+  },
+  {
+    "Titre": "Les indestructibles",
+    "Genre": "Animé",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+indestructibles+2004+bande+annonce"
+  },
+  {
+    "Titre": "Les Looney Tunes 1  ",
+    "Genre": "Animé",
+    "Lieu": "R3",
+    "Annee": 2003,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Looney+Tunes+1+++2003+bande+annonce"
+  },
+  {
+    "Titre": "Les Lyonnais",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Lyonnais+2011+bande+annonce"
+  },
+  {
+    "Titre": "Les orphelins",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+orphelins+2025+bande+annonce"
+  },
+  {
+    "Titre": "Les parasites",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 1999,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+parasites+1999+bande+annonce"
+  },
+  {
+    "Titre": "Les rivieres pourpres 2",
+    "Genre": "Thriller",
+    "Lieu": "R1",
+    "Annee": 2004,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+rivieres+pourpres+2+2004+bande+annonce"
+  },
+  {
+    "Titre": "Les soeurs d'arme",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2019,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+soeurs+d'arme+2019+bande+annonce"
+  },
+  {
+    "Titre": "Les tontons flingueurs",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": 1963,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+tontons+flingueurs+1963+bande+annonce"
+  },
+  {
+    "Titre": "Les Tuches 1",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Tuches+1+2011+bande+annonce"
+  },
+  {
+    "Titre": "Les Tuches 2",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2016,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Tuches+2+2016+bande+annonce"
+  },
+  {
+    "Titre": "Les Tuches 3",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Tuches+3+2018+bande+annonce"
+  },
+  {
+    "Titre": "Les Tuches 4",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2021,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Tuches+4+2021+bande+annonce"
+  },
+  {
+    "Titre": "Les Tuches 5 (God save the Tuches)",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Les+Tuches+5+(God+save+the+Tuches)+2025+bande+annonce"
+  },
+  {
+    "Titre": "Level up",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2011,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Level+up+2011+bande+annonce"
+  },
+  {
+    "Titre": "Life",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Life+2017+bande+annonce"
+  },
+  {
+    "Titre": "Lightspeed",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": 2006,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Lightspeed+2006+bande+annonce"
+  },
+  {
+    "Titre": "Logan",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2017,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Logan+2017+bande+annonce"
+  },
+  {
+    "Titre": "Love addict",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": 2018,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Love+addict+2018+bande+annonce"
+  },
+  {
+    "Titre": "Love addict",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Love+addict++bande+annonce"
+  },
+  {
+    "Titre": "Lucy",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": 2014,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Lucy+2014+bande+annonce"
+  },
+  {
+    "Titre": "Ma super ex",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ma+super+ex++bande+annonce"
+  },
+  {
+    "Titre": "Machina",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Machina++bande+annonce"
+  },
+  {
+    "Titre": "Mad Max 1",
+    "Genre": "Action",
+    "Lieu": "DD/R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mad+Max+1++bande+annonce"
+  },
+  {
+    "Titre": "Mad Max 2",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mad+Max+2++bande+annonce"
+  },
+  {
+    "Titre": "Mad Max 3",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mad+Max+3++bande+annonce"
+  },
+  {
+    "Titre": "Mad Max fury road",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mad+Max+fury+road++bande+annonce"
+  },
+  {
+    "Titre": "Madacascar 1",
+    "Genre": "Enfants",
+    "Lieu": "R4",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Madacascar+1++bande+annonce"
+  },
+  {
+    "Titre": "Madacascar 2",
+    "Genre": "Enfants",
+    "Lieu": "R4",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Madacascar+2++bande+annonce"
+  },
+  {
+    "Titre": "Man of steel superman",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Man+of+steel+superman++bande+annonce"
+  },
+  {
+    "Titre": "Mark Felt The Man Who Brought Down the White House",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mark+Felt+The+Man+Who+Brought+Down+the+White+House++bande+annonce"
+  },
+  {
+    "Titre": "Marry Poppins returns",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Marry+Poppins+returns++bande+annonce"
+  },
+  {
+    "Titre": "Mars 2056",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mars+2056++bande+annonce"
+  },
+  {
+    "Titre": "Mask",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mask++bande+annonce"
+  },
+  {
+    "Titre": "Master Ip Man Legacy",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Master+Ip+Man+Legacy++bande+annonce"
+  },
+  {
+    "Titre": "Matrix 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Matrix+1++bande+annonce"
+  },
+  {
+    "Titre": "Matrix 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Matrix+2++bande+annonce"
+  },
+  {
+    "Titre": "Matrix 3",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Matrix+3++bande+annonce"
+  },
+  {
+    "Titre": "Matrix Resurrections 2021",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Matrix+Resurrections+2021++bande+annonce"
+  },
+  {
+    "Titre": "Max Payne",
+    "Genre": "Action",
+    "Lieu": "R4",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Max+Payne++bande+annonce"
+  },
+  {
+    "Titre": "Mechanic Resurrection 2016",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mechanic+Resurrection+2016++bande+annonce"
+  },
+  {
+    "Titre": "Medelin",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Medelin++bande+annonce"
+  },
+  {
+    "Titre": "Men in black 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Men+in+black+1++bande+annonce"
+  },
+  {
+    "Titre": "Men in black 2",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Men+in+black+2++bande+annonce"
+  },
+  {
+    "Titre": "Mesrine 1 L'instinct De Mort CD1",
+    "Genre": "Polar",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mesrine+1+L'instinct+De+Mort+CD1++bande+annonce"
+  },
+  {
+    "Titre": "Mesrine 1 L'instinct De Mort CD2",
+    "Genre": "Polar",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mesrine+1+L'instinct+De+Mort+CD2++bande+annonce"
+  },
+  {
+    "Titre": "Mesrine 2 L'Ennemi Public.n°1",
+    "Genre": "Polar",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mesrine+2+L'Ennemi+Public.n°1++bande+annonce"
+  },
+  {
+    "Titre": "Meurs un autre jour (James Bond)",
+    "Genre": "Polar",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Meurs+un+autre+jour+(James+Bond)++bande+annonce"
+  },
+  {
+    "Titre": "Michel Vaillant",
+    "Genre": "",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Michel+Vaillant++bande+annonce"
+  },
+  {
+    "Titre": "Midway",
+    "Genre": "Guerre",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Midway++bande+annonce"
+  },
+  {
+    "Titre": "Million dollar baby",
+    "Genre": "Boxe",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Million+dollar+baby++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 1",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+1++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 2",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+2++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 3",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+3++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 4 - Protocole Fantôme",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+4+-+Protocole+Fantôme++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 5 - Rogue Nation",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+5+-+Rogue+Nation++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 6 - Fallout",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+6+-+Fallout++bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 7 - Dead Reckoning",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": 2023,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+7+-+Dead+Reckoning+2023+bande+annonce"
+  },
+  {
+    "Titre": "Mission impossible 8 - The Final Reckoning",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mission+impossible+8+-+The+Final+Reckoning+2025+bande+annonce"
+  },
+  {
+    "Titre": "Mon ami Joe",
+    "Genre": "",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mon+ami+Joe++bande+annonce"
+  },
+  {
+    "Titre": "Monsieur Aznavour",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Monsieur+Aznavour+2024+bande+annonce"
+  },
+  {
+    "Titre": "Morbius",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Morbius++bande+annonce"
+  },
+  {
+    "Titre": "Mourir peut attendre (James Bond)",
+    "Genre": "Espionnage / action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mourir+peut+attendre+(James+Bond)++bande+annonce"
+  },
+  {
+    "Titre": "Mr et Mrs Smith",
+    "Genre": "Action",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Mr+et+Mrs+Smith++bande+annonce"
+  },
+  {
+    "Titre": "Naked soldier",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Naked+soldier++bande+annonce"
+  },
+  {
+    "Titre": "Nemo",
+    "Genre": "Enfants",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Nemo++bande+annonce"
+  },
+  {
+    "Titre": "New police story",
+    "Genre": "Spectacle",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=New+police+story++bande+annonce"
+  },
+  {
+    "Titre": "Nicolas Canteloup",
+    "Genre": "",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Nicolas+Canteloup++bande+annonce"
+  },
+  {
+    "Titre": "Night and day",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Night+and+day++bande+annonce"
+  },
+  {
+    "Titre": "Nitro Rush ",
+    "Genre": " ",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Nitro+Rush+++bande+annonce"
+  },
+  {
+    "Titre": "Novembre",
+    "Genre": "Policier / Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Novembre++bande+annonce"
+  },
+  {
+    "Titre": "Now you see me 2",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Now+you+see+me+2++bande+annonce"
+  },
+  {
+    "Titre": "Oblivion",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Oblivion++bande+annonce"
+  },
+  {
+    "Titre": "Ocean's elven",
+    "Genre": "",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ocean's+elven++bande+annonce"
+  },
+  {
+    "Titre": "Ocean's twelve",
+    "Genre": "",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ocean's+twelve++bande+annonce"
+  },
+  {
+    "Titre": "Omar et Fred : Le SAV des emissions",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Omar+et+Fred+:+Le+SAV+des+emissions++bande+annonce"
+  },
+  {
+    "Titre": "Ong back 1",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ong+back+1++bande+annonce"
+  },
+  {
+    "Titre": "Ong back 3",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ong+back+3++bande+annonce"
+  },
+  {
+    "Titre": "Oppenheimer",
+    "Genre": "Bioptic",
+    "Lieu": "",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Oppenheimer++bande+annonce"
+  },
+  {
+    "Titre": "Osiris",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Osiris++bande+annonce"
+  },
+  {
+    "Titre": "OSS 117 : Alerte rouge en Afrique noire",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=OSS+117+:+Alerte+rouge+en+Afrique+noire++bande+annonce"
+  },
+  {
+    "Titre": "OSS 117 : Le Caire nid d'espion",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=OSS+117+:+Le+Caire+nid+d'espion++bande+annonce"
+  },
+  {
+    "Titre": "OSS 117 : Rio ne repond plus",
+    "Genre": "Comédie",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=OSS+117+:+Rio+ne+repond+plus++bande+annonce"
+  },
+  {
+    "Titre": "Outlaw",
+    "Genre": "",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Outlaw++bande+annonce"
+  },
+  {
+    "Titre": "Pacific rim",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Pacific+rim++bande+annonce"
+  },
+  {
+    "Titre": "Phil Collins",
+    "Genre": "Spectacle",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Phil+Collins++bande+annonce"
+  },
+  {
+    "Titre": "Phonegame",
+    "Genre": "",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Phonegame++bande+annonce"
+  },
+  {
+    "Titre": "Podium",
+    "Genre": "Comédie",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Podium++bande+annonce"
+  },
+  {
+    "Titre": "Precious cargo",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Precious+cargo++bande+annonce"
+  },
+  {
+    "Titre": "Predator",
+    "Genre": "Science Fiction",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Predator++bande+annonce"
+  },
+  {
+    "Titre": "Predator Badland",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Predator+Badland+2025+bande+annonce"
+  },
+  {
+    "Titre": "Prey",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Prey++bande+annonce"
+  },
+  {
+    "Titre": "Priest",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Priest++bande+annonce"
+  },
+  {
+    "Titre": "Prometheus",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Prometheus++bande+annonce"
+  },
+  {
+    "Titre": "Proteger et servir",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Proteger+et+servir++bande+annonce"
+  },
+  {
+    "Titre": "Pulp Fiction",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Pulp+Fiction++bande+annonce"
+  },
+  {
+    "Titre": "Qu'est ce qu'on a tous fait au bon dieu",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Qu'est+ce+qu'on+a+tous+fait+au+bon+dieu++bande+annonce"
+  },
+  {
+    "Titre": "Quantum of solace (James Bond )",
+    "Genre": "Espionnage / action",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Quantum+of+solace+(James+Bond+)++bande+annonce"
+  },
+  {
+    "Titre": "Raid dingue",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Raid+dingue++bande+annonce"
+  },
+  {
+    "Titre": "Rambo 4",
+    "Genre": "Action",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rambo+4++bande+annonce"
+  },
+  {
+    "Titre": "Rambo 5 Last Blood",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rambo+5+Last+Blood++bande+annonce"
+  },
+  {
+    "Titre": "Real steel",
+    "Genre": "Science Fiction",
+    "Lieu": "DD+R4",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Real+steel++bande+annonce"
+  },
+  {
+    "Titre": "Red 1",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Red+1++bande+annonce"
+  },
+  {
+    "Titre": "Red notice",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Red+notice++bande+annonce"
+  },
+  {
+    "Titre": "Red sparrow",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Red+sparrow++bande+annonce"
+  },
+  {
+    "Titre": "Rendez-vous en enfer",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rendez-vous+en+enfer++bande+annonce"
+  },
+  {
+    "Titre": "Replicas",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Replicas++bande+annonce"
+  },
+  {
+    "Titre": "Resident evil 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Resident+evil+1++bande+annonce"
+  },
+  {
+    "Titre": "Resident evil 2",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Resident+evil+2++bande+annonce"
+  },
+  {
+    "Titre": "Resident evil 3",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Resident+evil+3++bande+annonce"
+  },
+  {
+    "Titre": "Resident evil 4",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Resident+evil+4++bande+annonce"
+  },
+  {
+    "Titre": "Revenge",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Revenge++bande+annonce"
+  },
+  {
+    "Titre": "Riddick",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Riddick++bande+annonce"
+  },
+  {
+    "Titre": "Riddick 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R3",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Riddick+1++bande+annonce"
+  },
+  {
+    "Titre": "Riddick 2",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Riddick+2++bande+annonce"
+  },
+  {
+    "Titre": "Rien à declarer",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rien+à+declarer++bande+annonce"
+  },
+  {
+    "Titre": "Road House",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Road+House++bande+annonce"
+  },
+  {
+    "Titre": "Road House 224",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Road+House+224+2024+bande+annonce"
+  },
+  {
+    "Titre": "Rocky Balboa",
+    "Genre": "Boxe",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rocky+Balboa+++bande+annonce"
+  },
+  {
+    "Titre": "Rogue",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rogue+++bande+annonce"
+  },
+  {
+    "Titre": "Rogue one",
+    "Genre": " ",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rogue+one+++bande+annonce"
+  },
+  {
+    "Titre": "Rollerball 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rollerball+1+++bande+annonce"
+  },
+  {
+    "Titre": "Rollerball 2",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rollerball+2+++bande+annonce"
+  },
+  {
+    "Titre": "Romeo doit mourir",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Romeo+doit+mourir+++bande+annonce"
+  },
+  {
+    "Titre": "RTT",
+    "Genre": "Comédie",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=RTT+++bande+annonce"
+  },
+  {
+    "Titre": "Rush (Nicky Lauda)",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rush+(Nicky+Lauda)+++bande+annonce"
+  },
+  {
+    "Titre": "Rush hour 1",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rush+hour+1+++bande+annonce"
+  },
+  {
+    "Titre": "Rush hour 2",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rush+hour+2+++bande+annonce"
+  },
+  {
+    "Titre": "Rush hour 3",
+    "Genre": "Arts Martiaux",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Rush+hour+3+++bande+annonce"
+  },
+  {
+    "Titre": "Safe",
+    "Genre": "",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Safe+++bande+annonce"
+  },
+  {
+    "Titre": "Safe house",
+    "Genre": "",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Safe+house+++bande+annonce"
+  },
+  {
+    "Titre": "Salt",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Salt+++bande+annonce"
+  },
+  {
+    "Titre": "Savage dog",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Savage+dog+++bande+annonce"
+  },
+  {
+    "Titre": "Scooby Doo 1",
+    "Genre": "Enfants",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Scooby+Doo+1+++bande+annonce"
+  },
+  {
+    "Titre": "Scooby Doo 2",
+    "Genre": "Enfants",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Scooby+Doo+2+++bande+annonce"
+  },
+  {
+    "Titre": "Score final",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Score+final+++bande+annonce"
+  },
+  {
+    "Titre": "Scorpion",
+    "Genre": "Boxe",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Scorpion+++bande+annonce"
+  },
+  {
+    "Titre": "Secret man",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Secret+man+++bande+annonce"
+  },
+  {
+    "Titre": "Seized",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Seized+++bande+annonce"
+  },
+  {
+    "Titre": "Senna",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Senna+++bande+annonce"
+  },
+  {
+    "Titre": "Sept vies",
+    "Genre": "Drame",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Sept+vies+++bande+annonce"
+  },
+  {
+    "Titre": "Shaft",
+    "Genre": "Policier  ",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shaft+++bande+annonce"
+  },
+  {
+    "Titre": "Shaolin soccer",
+    "Genre": "Policier / Action",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shaolin+soccer+++bande+annonce"
+  },
+  {
+    "Titre": "Shelter",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2026,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shelter+2026+bande+annonce"
+  },
+  {
+    "Titre": "Sherif fais moi peur",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Sherif+fais+moi+peur+++bande+annonce"
+  },
+  {
+    "Titre": "Sherlock Holmes 1",
+    "Genre": "Polar",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Sherlock+Holmes+1+++bande+annonce"
+  },
+  {
+    "Titre": "Shirley et Dino",
+    "Genre": "Spectacle",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shirley+et+Dino+++bande+annonce"
+  },
+  {
+    "Titre": "Shoot em up",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shoot+em+up+++bande+annonce"
+  },
+  {
+    "Titre": "Shrek 1",
+    "Genre": "Animé",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shrek+1+++bande+annonce"
+  },
+  {
+    "Titre": "Shrek 2",
+    "Genre": "Animé",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Shrek+2+++bande+annonce"
+  },
+  {
+    "Titre": "Sisu 1",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Sisu+1++bande+annonce"
+  },
+  {
+    "Titre": "Sisu 2",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Sisu+2++bande+annonce"
+  },
+  {
+    "Titre": "Skyfall (James Bond)",
+    "Genre": "Espionnage / action",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Skyfall+(James+Bond)+++bande+annonce"
+  },
+  {
+    "Titre": "Snake eyes",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Snake+eyes+++bande+annonce"
+  },
+  {
+    "Titre": "Soul",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Soul+++bande+annonce"
+  },
+  {
+    "Titre": "Sous la Seine",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Sous+la+Seine++bande+annonce"
+  },
+  {
+    "Titre": "Special ID",
+    "Genre": " ",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Special+ID+++bande+annonce"
+  },
+  {
+    "Titre": "Spider man 2018",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spider+man+2018+++bande+annonce"
+  },
+  {
+    "Titre": "Spider-Man - No way home",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spider-Man+-+No+way+home+++bande+annonce"
+  },
+  {
+    "Titre": "Spiderman 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spiderman+1+++bande+annonce"
+  },
+  {
+    "Titre": "Spiderman 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spiderman+2+++bande+annonce"
+  },
+  {
+    "Titre": "Spiderman 3 (the amazing spiderman)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spiderman+3+(the+amazing+spiderman)+++bande+annonce"
+  },
+  {
+    "Titre": "Spiderman 4 (new home)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spiderman+4+(new+home)+++bande+annonce"
+  },
+  {
+    "Titre": "Spiderman 5 (no way home)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spiderman+5+(no+way+home)+++bande+annonce"
+  },
+  {
+    "Titre": "Spiderman Home coming",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Spiderman+Home+coming+++bande+annonce"
+  },
+  {
+    "Titre": "Stan et Ollie",
+    "Genre": "Bioptic",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Stan+et+Ollie+++bande+annonce"
+  },
+  {
+    "Titre": "Star 80 la suite",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+80+la+suite+++bande+annonce"
+  },
+  {
+    "Titre": "Star trek darkness",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+trek+darkness+++bande+annonce"
+  },
+  {
+    "Titre": "Star War 8 (le dernier Jedi)",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+War+8+(le+dernier+Jedi)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 1 (la menace fantome)",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+1+(la+menace+fantome)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 2 (l'attaque des colnes)",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+2+(l'attaque+des+colnes)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 3 (la revanche des Siths)",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+3+(la+revanche+des+Siths)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 4 (un nouvel espoir)",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+4+(un+nouvel+espoir)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 5 (l'empire contre attaque)",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+5+(l'empire+contre+attaque)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 6 (le retour de jedï)",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+6+(le+retour+de+jedï)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 7 (le réveil de la force)",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+7+(le+réveil+de+la+force)+++bande+annonce"
+  },
+  {
+    "Titre": "Star Wars 9 (l'ascension de Skywalker)",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Star+Wars+9+(l'ascension+de+Skywalker)+++bande+annonce"
+  },
+  {
+    "Titre": "Starship troopers 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Starship+troopers+1+++bande+annonce"
+  },
+  {
+    "Titre": "Starship troopers 2",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Starship+troopers+2+++bande+annonce"
+  },
+  {
+    "Titre": "Starship troopers 3",
+    "Genre": "Science Fiction",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Starship+troopers+3+++bande+annonce"
+  },
+  {
+    "Titre": "Starsky et Hutch",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Starsky+et+Hutch+++bande+annonce"
+  },
+  {
+    "Titre": "Superfly",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superfly+++bande+annonce"
+  },
+  {
+    "Titre": "Superheros",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superheros+++bande+annonce"
+  },
+  {
+    "Titre": "Superheros malgré lui",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superheros+malgré+lui+++bande+annonce"
+  },
+  {
+    "Titre": "Superman 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superman+1+++bande+annonce"
+  },
+  {
+    "Titre": "Superman 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superman+2+++bande+annonce"
+  },
+  {
+    "Titre": "Superman 3",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superman+3+++bande+annonce"
+  },
+  {
+    "Titre": "Superman 4",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superman+4+++bande+annonce"
+  },
+  {
+    "Titre": "Superman returns",
+    "Genre": "Fantastique",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superman+returns+++bande+annonce"
+  },
+  {
+    "Titre": "Superman 5",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Superman+5+2025+bande+annonce"
+  },
+  {
+    "Titre": "Tais toi !",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tais+toi+!+++bande+annonce"
+  },
+  {
+    "Titre": "Taken 1",
+    "Genre": "Action",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Taken+1+++bande+annonce"
+  },
+  {
+    "Titre": "Taken 2",
+    "Genre": "Action",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Taken+2+++bande+annonce"
+  },
+  {
+    "Titre": "Tanguy",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tanguy+++bande+annonce"
+  },
+  {
+    "Titre": "Tanguy : Le retour",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tanguy+:+Le+retour+++bande+annonce"
+  },
+  {
+    "Titre": "Taxi 2",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Taxi+2+++bande+annonce"
+  },
+  {
+    "Titre": "Taxi 3",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Taxi+3+++bande+annonce"
+  },
+  {
+    "Titre": "Taxi 4",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Taxi+4+++bande+annonce"
+  },
+  {
+    "Titre": "Taxi 5",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Taxi+5+++bande+annonce"
+  },
+  {
+    "Titre": "Terminator 3 (le soulevement des machines)",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Terminator+3+(le+soulevement+des+machines)+++bande+annonce"
+  },
+  {
+    "Titre": "Terminator 4 (rennaissance)",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Terminator+4+(rennaissance)+++bande+annonce"
+  },
+  {
+    "Titre": "The avengers 1",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+avengers+1+++bande+annonce"
+  },
+  {
+    "Titre": "The avengers 2",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+avengers+2+++bande+annonce"
+  },
+  {
+    "Titre": "The avengers 3",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+avengers+3+++bande+annonce"
+  },
+  {
+    "Titre": "The Bourne",
+    "Genre": "Action",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+Bourne+++bande+annonce"
+  },
+  {
+    "Titre": "The crow 2024",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+crow+2024+2024+bande+annonce"
+  },
+  {
+    "Titre": "The defender",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+defender+++bande+annonce"
+  },
+  {
+    "Titre": "The fall guy",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+fall+guy+2024+bande+annonce"
+  },
+  {
+    "Titre": "The Flash 2023",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+Flash+2023+++bande+annonce"
+  },
+  {
+    "Titre": "The Gentlemen",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+Gentlemen+++bande+annonce"
+  },
+  {
+    "Titre": "The girl in the spiders web",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+girl+in+the+spiders+web+++bande+annonce"
+  },
+  {
+    "Titre": "The Gray man",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+Gray+man+++bande+annonce"
+  },
+  {
+    "Titre": "The hard corps",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+hard+corps+++bande+annonce"
+  },
+  {
+    "Titre": "The hitman bodyguard",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+hitman+bodyguard+++bande+annonce"
+  },
+  {
+    "Titre": "The hitmans bodyguard 2",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+hitmans+bodyguard+2+++bande+annonce"
+  },
+  {
+    "Titre": "The keeper",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+keeper+++bande+annonce"
+  },
+  {
+    "Titre": "The machine",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+machine+++bande+annonce"
+  },
+  {
+    "Titre": "The revenant",
+    "Genre": "",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+revenant+++bande+annonce"
+  },
+  {
+    "Titre": "The skulls",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+skulls+++bande+annonce"
+  },
+  {
+    "Titre": "The Titan",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+Titan+++bande+annonce"
+  },
+  {
+    "Titre": "The Tomorrow War",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=The+Tomorrow+War+++bande+annonce"
+  },
+  {
+    "Titre": "Thor 1",
+    "Genre": "Fantastique",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Thor+1+++bande+annonce"
+  },
+  {
+    "Titre": "Thor 2",
+    "Genre": "Fantastique",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Thor+2+++bande+annonce"
+  },
+  {
+    "Titre": "Thor 3 (ragnarok)",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Thor+3+(ragnarok)+++bande+annonce"
+  },
+  {
+    "Titre": "Thor The Dark World",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Thor+The+Dark+World+++bande+annonce"
+  },
+  {
+    "Titre": "Today you die",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Today+you+die+++bande+annonce"
+  },
+  {
+    "Titre": "Tomb raider 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tomb+raider+1+++bande+annonce"
+  },
+  {
+    "Titre": "Tomb raider 2018",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tomb+raider+2018+++bande+annonce"
+  },
+  {
+    "Titre": "Top gun Maverik",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Top+gun+Maverik+++bande+annonce"
+  },
+  {
+    "Titre": "Traffic",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Traffic+++bande+annonce"
+  },
+  {
+    "Titre": "Transformers 1",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Transformers+1+++bande+annonce"
+  },
+  {
+    "Titre": "Transformers 3",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Transformers+3+++bande+annonce"
+  },
+  {
+    "Titre": "Traque",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Traque+++bande+annonce"
+  },
+  {
+    "Titre": "Triple X 1",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Triple+X+1+++bande+annonce"
+  },
+  {
+    "Titre": "Triple X 2 (next level)",
+    "Genre": "Action",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Triple+X+2+(next+level)+++bande+annonce"
+  },
+  {
+    "Titre": "Triple X 3 (reactivation)",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Triple+X+3+(reactivation)+++bande+annonce"
+  },
+  {
+    "Titre": "Troie",
+    "Genre": "Histoire",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Troie+++bande+annonce"
+  },
+  {
+    "Titre": "Troll",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Troll+++bande+annonce"
+  },
+  {
+    "Titre": "Troll 2",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2025,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Troll+2+2025+bande+annonce"
+  },
+  {
+    "Titre": "Tron (l'héritage)",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tron+(l'héritage)+++bande+annonce"
+  },
+  {
+    "Titre": "Truands",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Truands+++bande+annonce"
+  },
+  {
+    "Titre": "Twilight 1 (fascination)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Twilight+1+(fascination)+++bande+annonce"
+  },
+  {
+    "Titre": "Twilight 2 (tentation)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Twilight+2+(tentation)+++bande+annonce"
+  },
+  {
+    "Titre": "Twilight 3 (hésitation)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Twilight+3+(hésitation)+++bande+annonce"
+  },
+  {
+    "Titre": "Tyler Rake 1",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tyler+Rake+1++bande+annonce"
+  },
+  {
+    "Titre": "Tyler Rake 2",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": "",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Tyler+Rake+2++bande+annonce"
+  },
+  {
+    "Titre": "U.S Marshall",
+    "Genre": "Polar",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=U.S+Marshall+++bande+annonce"
+  },
+  {
+    "Titre": "Ultraviolet",
+    "Genre": "Science Fiction",
+    "Lieu": "DD/R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Ultraviolet+++bande+annonce"
+  },
+  {
+    "Titre": "Un homme en colère",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+homme+en+colère+++bande+annonce"
+  },
+  {
+    "Titre": "Un long Dimanche de fiancaille",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+long+Dimanche+de+fiancaille+++bande+annonce"
+  },
+  {
+    "Titre": "Un seul deviendra Invincible 1",
+    "Genre": "Boxe",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+seul+deviendra+Invincible+1+++bande+annonce"
+  },
+  {
+    "Titre": "Un seul deviendra Invincible 2",
+    "Genre": "Boxe",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+seul+deviendra+Invincible+2+++bande+annonce"
+  },
+  {
+    "Titre": "Un seul deviendra Invincible 3",
+    "Genre": "Boxe",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+seul+deviendra+Invincible+3+++bande+annonce"
+  },
+  {
+    "Titre": "Un ticket pour l'espace",
+    "Genre": "Comédie",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+ticket+pour+l'espace+++bande+annonce"
+  },
+  {
+    "Titre": "Uncharted",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Uncharted+++bande+annonce"
+  },
+  {
+    "Titre": "Underworld 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Underworld+1+++bande+annonce"
+  },
+  {
+    "Titre": "Underworld 2",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Underworld+2+++bande+annonce"
+  },
+  {
+    "Titre": "Underworld 3",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Underworld+3+++bande+annonce"
+  },
+  {
+    "Titre": "Underworld 4",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Underworld+4+++bande+annonce"
+  },
+  {
+    "Titre": "Underworld Blood Wars",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Underworld+Blood+Wars+++bande+annonce"
+  },
+  {
+    "Titre": "Un p'tit truc en plus",
+    "Genre": "Comédie",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Un+p'tit+truc+en+plus+2024+bande+annonce"
+  },
+  {
+    "Titre": "Une chance sur deux",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Une+chance+sur+deux+++bande+annonce"
+  },
+  {
+    "Titre": "Upgrade",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Upgrade+++bande+annonce"
+  },
+  {
+    "Titre": "Valerian",
+    "Genre": "Science Fiction",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Valerian+++bande+annonce"
+  },
+  {
+    "Titre": "Van Helsing",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Van+Helsing+++bande+annonce"
+  },
+  {
+    "Titre": "Vangard",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Vangard+++bande+annonce"
+  },
+  {
+    "Titre": "Vengeance",
+    "Genre": " ",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Vengeance+++bande+annonce"
+  },
+  {
+    "Titre": "Vengeance aux poings",
+    "Genre": "Arts Martiaux",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Vengeance+aux+poings+++bande+annonce"
+  },
+  {
+    "Titre": "Venom",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Venom+++bande+annonce"
+  },
+  {
+    "Titre": "Venom 2",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Venom+2+++bande+annonce"
+  },
+  {
+    "Titre": "Venom 3 The last dance",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": 2024,
+    "TrailerLink": "https://www.youtube.com/results?search_query=Venom+3+The+last+dance+2024+bande+annonce"
+  },
+  {
+    "Titre": "Violent night",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Violent+night+++bande+annonce"
+  },
+  {
+    "Titre": "Voleuses",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Voleuses+++bande+annonce"
+  },
+  {
+    "Titre": "Voyage au centre de la terre",
+    "Genre": "Aventure",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Voyage+au+centre+de+la+terre+++bande+annonce"
+  },
+  {
+    "Titre": "Wakanda forever",
+    "Genre": "Fantastique",
+    "Lieu": "",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Wakanda+forever+++bande+annonce"
+  },
+  {
+    "Titre": "Wall. E",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Wall.+E+++bande+annonce"
+  },
+  {
+    "Titre": "Wanted",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Wanted+++bande+annonce"
+  },
+  {
+    "Titre": "West side story",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=West+side+story+++bande+annonce"
+  },
+  {
+    "Titre": "Who am i ?",
+    "Genre": "",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Who+am+i+?+++bande+annonce"
+  },
+  {
+    "Titre": "Wonder woman",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Wonder+woman+++bande+annonce"
+  },
+  {
+    "Titre": "Wonder Woman 1984",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Wonder+Woman+1984+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men 1",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+1+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men 2 (le commencement)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+2+(le+commencement)+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men 3",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+3+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men 4 (le commencement)",
+    "Genre": "Fantastique",
+    "Lieu": "R2",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+4+(le+commencement)+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men Apocalypse",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+Apocalypse+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men Dark Phoenix",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+Dark+Phoenix+++bande+annonce"
+  },
+  {
+    "Titre": "X-Men days of future",
+    "Genre": "Fantastique",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=X-Men+days+of+future+++bande+annonce"
+  },
+  {
+    "Titre": "Zillion",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Zillion+++bande+annonce"
+  },
+  {
+    "Titre": "Zone hostile",
+    "Genre": "Guerre",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Zone+hostile+++bande+annonce"
+  },
+  {
+    "Titre": "Zorro (Alain Delon)",
+    "Genre": "",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=Zorro+(Alain+Delon)+++bande+annonce"
+  },
+  {
+    "Titre": "12 rounds",
+    "Genre": "Action",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=12+rounds+++bande+annonce"
+  },
+  {
+    "Titre": "13 Vies",
+    "Genre": "",
+    "Lieu": "",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=13+Vies+++bande+annonce"
+  },
+  {
+    "Titre": "2 Guns",
+    "Genre": "Action",
+    "Lieu": "DD",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=2+Guns+++bande+annonce"
+  },
+  {
+    "Titre": "2 Saints",
+    "Genre": "Action",
+    "Lieu": "R4",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=2+Saints+++bande+annonce"
+  },
+  {
+    "Titre": "2001 l'odyssee de l'espace",
+    "Genre": "Science Fiction",
+    "Lieu": "R1",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=2001+l'odyssee+de+l'espace+++bande+annonce"
+  },
+  {
+    "Titre": "40 jours et 40 nuits",
+    "Genre": "Comédie",
+    "Lieu": "R3",
+    "Annee": " ",
+    "TrailerLink": "https://www.youtube.com/results?search_query=40+jours+et+40+nuits+++bande+annonce"
+  }
+];
+
+        // Initialiser avec les films par défaut si vide
+        if (movies.length === 0) {
+            movies = initialMovies;
+            saveToLocalStorage();
+        }
+
+        // Basculer le tri par annee
+        function toggleSortYear() {
+            if (sortYearOrder === null) {
+                sortYearOrder = 'desc';
+            } else if (sortYearOrder === 'desc') {
+                sortYearOrder = 'asc';
+            } else {
+                sortYearOrder = null;
+            }
+            
+            const sortBtn = document.getElementById('sortYearBtn');
+            if (sortYearOrder === null) {
+                sortBtn.style.backgroundColor = '#2a2a2a';
+                sortBtn.style.color = '#d4af37';
+                sortBtn.textContent = '📅 Trier par annee';
+            } else if (sortYearOrder === 'desc') {
+                sortBtn.style.backgroundColor = '#d4af37';
+                sortBtn.style.color = '#1a1a1a';
+                sortBtn.textContent = '📅 Annee (recents)';
+            } else {
+                sortBtn.style.backgroundColor = '#d4af37';
+                sortBtn.style.color = '#1a1a1a';
+                sortBtn.textContent = '📅 Annee (anciens)';
+            }
+            
+            const searchTerm = document.getElementById('searchInput').value;
+            applyFilters(searchTerm, currentGenreFilter);
+        }
+
+        // Basculer l'affichage des genres
+        function toggleGenreFilters() {
+            genreFiltersVisible = !genreFiltersVisible;
+            const genreFilters = document.getElementById('genreFilters');
+            const toggleBtn = document.querySelector('.toggle-genres-btn');
+            
+            if (genreFiltersVisible) {
+                genreFilters.classList.remove('hidden');
+                toggleBtn.style.backgroundColor = '#d4af37';
+                toggleBtn.style.color = '#1a1a1a';
+            } else {
+                genreFilters.classList.add('hidden');
+                toggleBtn.style.backgroundColor = '#2a2a2a';
+                toggleBtn.style.color = '#d4af37';
+            }
+        }
+
+        // Initialiser les genres
+        function initializeGenres() {
+            const genres = [...new Set(movies.map(m => m.Genre).filter(Boolean))].sort();
+            const genreFilters = document.getElementById('genreFilters');
+            genreFilters.innerHTML = '';
+            
+            const allBtn = document.createElement('button');
+            allBtn.className = 'genre-btn active';
+            allBtn.textContent = 'Tous les genres';
+            allBtn.onclick = () => filterByGenre(null);
+            genreFilters.appendChild(allBtn);
+            
+            genres.forEach(genre => {
+                const btn = document.createElement('button');
+                btn.className = 'genre-btn';
+                btn.textContent = genre;
+                btn.onclick = () => filterByGenre(genre);
+                genreFilters.appendChild(btn);
+            });
+        }
+
+        // Filtrer par genre
+        function filterByGenre(genre) {
+            currentGenreFilter = genre;
+            const searchTerm = document.getElementById('searchInput').value;
+            applyFilters(searchTerm, genre);
+            
+            // Mettre à jour les boutons
+            document.querySelectorAll('.genre-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((genre === null && btn.textContent === 'Tous les genres') || 
+                    (genre && btn.textContent === genre)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Appliquer les filtres
+        function applyFilters(searchTerm, genre) {
+            let filtered = movies;
+            
+            if (genre) {
+                filtered = filtered.filter(m => m.Genre === genre);
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(m => 
+                    m.Titre.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            if (sortYearOrder === 'asc') {
+                filtered.sort((a, b) => (a.Annee || 0) - (b.Annee || 0));
+            } else if (sortYearOrder === 'desc') {
+                filtered.sort((a, b) => (b.Annee || 0) - (a.Annee || 0));
+            }
+            
+            displayMovies(filtered);
+        }
+
+        // Afficher les films
+        function displayMovies(moviesToDisplay = movies) {
+            const list = document.getElementById('moviesList');
+            const noResults = document.getElementById('noResults');
+            
+            list.innerHTML = '';
+            
+            if (moviesToDisplay.length === 0) {
+                noResults.style.display = 'block';
+                document.getElementById('movieCount').textContent = '0';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            document.getElementById('movieCount').textContent = moviesToDisplay.length;
+            
+            moviesToDisplay.forEach((movie, index) => {
+                const row = document.createElement('div');
+                row.className = 'movie-row';
+                
+                const trailerUrl = movie.TrailerLink || `https://www.youtube.com/results?search_query=${encodeURIComponent(movie.Titre + ' bande annonce')}`;
+                const preteStatus = movie.Prete ? `<span class="prete-badge">📍 PRÊTÉ${movie.Emprunteur ? ' à ' + movie.Emprunteur : ''}</span>` : '';
+                
+                row.innerHTML = `
+                    <div class="movie-number">${index + 1}</div>
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.Titre}${preteStatus}</div>
+                        <div class="movie-details">
+                            <span class="movie-genre">${movie.Genre || 'Non spécifié'}</span>
+                            <span class="movie-year">${movie.Annee || 'Année inconnue'}</span>
+                        </div>
+                    </div>
+                    <div class="movie-actions">
+                        <a href="${trailerUrl}" target="_blank" class="trailer-link">▶ Bande-annonce</a>
+                        <button class="btn btn-secondary" onclick="editFilm(${movies.indexOf(movie)})">Modifier</button>
+                        <button class="btn btn-danger" onclick="deleteFilm(${movies.indexOf(movie)})">Supprimer</button>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // Rechercher
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value;
+            applyFilters(term, currentGenreFilter);
+        });
+
+        // Ouvrir modal pour ajouter
+        function openAddModal() {
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = 'Ajouter un film';
+            document.getElementById('filmForm').reset();
+            document.getElementById('filmPrete').checked = false;
+            document.getElementById('filmEmprunteur').value = '';
+            document.getElementById('filmModal').style.display = 'block';
+        }
+
+        // Ouvrir modal pour modifier
+        function editFilm(index) {
+            editingIndex = index;
+            const movie = movies[index];
+            document.getElementById('modalTitle').textContent = 'Modifier le film';
+            document.getElementById('filmTitle').value = movie.Titre;
+            document.getElementById('filmGenre').value = movie.Genre || '';
+            document.getElementById('filmYear').value = movie.Annee || '';
+            document.getElementById('filmTrailer').value = movie.TrailerLink || '';
+            document.getElementById('filmPrete').checked = movie.Prete || false;
+            document.getElementById('filmEmprunteur').value = movie.Emprunteur || '';
+            document.getElementById('filmModal').style.display = 'block';
+        }
+
+        // Fermer modal
+        function closeModal() {
+            document.getElementById('filmModal').style.display = 'none';
+            editingIndex = -1;
+        }
+
+        // Enregistrer film
+        function saveFilm(event) {
+            event.preventDefault();
+            
+            const film = {
+                Titre: document.getElementById('filmTitle').value,
+                Genre: document.getElementById('filmGenre').value,
+                Annee: parseInt(document.getElementById('filmYear').value) || new Date().getFullYear(),
+                TrailerLink: document.getElementById('filmTrailer').value,
+                Prete: document.getElementById('filmPrete').checked,
+                Emprunteur: document.getElementById('filmEmprunteur').value || '',
+                Lieu: ''
+            };
+            
+            if (editingIndex === -1) {
+                movies.push(film);
+            } else {
+                movies[editingIndex] = film;
+            }
+            
+            saveToLocalStorage();
+            initializeGenres();
+            displayMovies();
+            closeModal();
+        }
+
+        // Supprimer film
+        function deleteFilm(index) {
+              if (confirm('Êtes-vous sûr de vouloir supprimer ce film ?')) {
+                movies.splice(index, 1);
+                saveToLocalStorage();
+                initializeGenres();
+                displayMovies();
+            }
+        }
+
+        // Sauvegarder dans localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('moviesCollection', JSON.stringify(movies));
+        }
+
+        // Fermer modal en cliquant dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('filmModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initialiser
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeGenres();
+            displayMovies();
+        });
+    </script>
+</body>
+</html>
