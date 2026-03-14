@@ -1,11 +1,50 @@
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('Service Worker enregistré avec succès :', registration);
+const CACHE_NAME = 'filmotheque-cache-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/favicon.png',
+  // Ajoutez ici tous les fichiers essentiels de votre site (CSS, JS, images principales)
+  // Par exemple :
+  // '/style.css',
+  // '/script.js',
+  // '/images/logo.png'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Cache ouvert');
+        return cache.addAll(urlsToCache);
       })
-      .catch(error => {
-        console.log('Échec de l\'enregistrement du Service Worker :', error);
-      });
-  });
-}
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Suppression de l\'ancien cache :', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
