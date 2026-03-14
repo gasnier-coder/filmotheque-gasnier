@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <style>
+	<link rel="manifest" href="manifest.json">
         * {
             margin: 0;
             padding: 0;
@@ -5155,5 +5156,11 @@
             displayMovies();
         });
     </script>
+	<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+
 </body>
 </html>
