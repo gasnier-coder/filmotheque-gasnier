@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<button id="fullscreenBtn" onclick="toggleFullscreen()">Plein écran</button>
     <title>Filmotheque C. GASNIER</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +20,7 @@
             background-color: #0f0f0f;
             color: #ffffff;
             font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
+            line-height: 4.6;
         }
 
         .hero {
@@ -469,10 +470,12 @@
     </style>
 </head>
 <body>
+
+</button>
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Filmothèque C. GASNIER</h1>
+            <h1>Filmotheque C. GASNIER</h1>
             <p>Cette liste est à jour</p>
         </div>
         <div class="hero-line"></div>
@@ -5157,18 +5160,37 @@
         });
     </script>
 	<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('Service Worker enregistré avec succès :', registration);
-        })
-        .catch(error => {
-          console.log('Échec de l\'enregistrement du Service Worker :', error);
-        });
-    });
-  }
+function toggleFullscreen() {
+    const btn = document.getElementById("fullscreenBtn");
+
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        btn.textContent = "Quitter plein écran";
+    } else {
+        document.exitFullscreen();
+        btn.textContent = "Plein écran";
+    }
+}
+
+document.addEventListener("fullscreenchange", () => {
+    const btn = document.getElementById("fullscreenBtn");
+    if (!document.fullscreenElement) {
+        btn.textContent = "Plein écran";
+    }
+});
 </script>
-	
+<script>
+function toggleFullscreen() {
+    const btn = document.getElementById("fullscreenBtn");
+
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        btn.textContent = "Quitter plein écran";
+    } else {
+        document.exitFullscreen();
+        btn.textContent = "Plein écran";
+    }
+}
+</script>
 </body>
 </html>
