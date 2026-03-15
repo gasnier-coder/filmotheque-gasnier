@@ -5160,62 +5160,38 @@
         }
 
         // Initialiser
-        window.addEventListener('DOMContentLoaded', () => {
+              window.addEventListener('DOMContentLoaded', () => {
             initializeGenres();
             displayMovies();
         });
     </script>
-	<script>
-function toggleFullscreen() {
-    const btn = document.getElementById("fullscreenBtn");
 
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        btn.textContent = "Quitter plein écran";
-    } else {
-        document.exitFullscreen();
-        btn.textContent = "Plein écran";
+    <script>
+    function toggleFullscreen() {
+        const btn = document.getElementById("fullscreenBtn");
+
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            btn.textContent = "Quitter plein écran";
+        } else {
+            document.exitFullscreen();
+            btn.textContent = "Plein écran";
+        }
     }
-}
 
-document.addEventListener("fullscreenchange", () => {
-    const btn = document.getElementById("fullscreenBtn");
-    if (!document.fullscreenElement) {
-        btn.textContent = "Plein écran";
+    document.addEventListener("fullscreenchange", () => {
+        const btn = document.getElementById("fullscreenBtn");
+        if (!document.fullscreenElement) {
+            btn.textContent = "Plein écran";
+        }
+    });
+    </script>
+
+    <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
     }
-});
-</script>
-<script>
-function toggleFullscreen() {
-    const btn = document.getElementById("fullscreenBtn");
-
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        btn.textContent = "Quitter plein écran";
-    } else {
-        document.exitFullscreen();
-        btn.textContent = "Plein écran";
-    }
-}
-<script>
-function toggleFullscreen() {
-    const btn = document.getElementById("fullscreenBtn");
-
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        btn.textContent = "Quitter plein écran";
-    } else {
-        document.exitFullscreen();
-        btn.textContent = "Plein écran";
-    }
-}
-</script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
+    </script>
 
 </body>
 </html>
